@@ -1,0 +1,31 @@
+{
+  "name" : "sgh/comparable-arrays",
+  "description" : "Provides generic Comparators for arrays.",
+  "version" : "1.0.0",
+  "require" : {
+    "php" : ">=5.4.0",
+    "sgh/comparable" : ">=1.0.0"
+  },
+  "require-dev" : {
+    "phpunit/phpunit" : "4.*"
+  },
+  "authors" : [ {
+    "name" : "Fabian Schmengler",
+    "email" : "fschmengler@sgh-it.eu",
+    "homepage" : "http://www.schmengler-se.de/",
+    "role" : "Developer"
+  } ],
+  "autoload-dev" : {
+    "psr-4" : {
+      "SGH\\Comparable\\Arrays\\Test\\" : "tests"
+    }
+  },
+  "keywords" : [ "comparable", "comparator", "arrays" ],
+  "autoload" : {
+    "psr-4" : {
+      "SGH\\Comparable\\Arrays\\" : "src"
+    }
+  },
+  "license" : "MIT",
+  "homepage" : "https://github.com/schmengler/comparable-arrays"
+}
