@@ -2,6 +2,7 @@
 namespace SGH\Comparable\Arrays\Test\Comparator;
 
 use SGH\Comparable\Arrays\Comparator\KeyComparator;
+use SGH\Comparable\Test\Comparator\AbstractComparatorTest;
 /**
  * ArrayComparator test case.
  * 

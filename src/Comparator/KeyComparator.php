@@ -1,6 +1,8 @@
 <?php
 namespace SGH\Comparable\Arrays\Comparator;
 
+use SGH\Comparable\Comparator;
+use SGH\Comparable\Comparator\NumericComparator;
 /**
  * Configurable array comparator
  * 
@@ -18,13 +20,21 @@ class KeyComparator extends AbstractArrayComparator
      */
     private $key;
     /**
+     * @var Comparator
+     */
+    private $itemComparator;
+    /**
      * Constructor
      * 
      * @param string $key
      */
-    public function __construct($key)
+    public function __construct($key, Comparator $itemComparator = null)
     {
         $this->setKey($key);
+        if ($itemComparator === null) {
+            $itemComparator = new NumericComparator();
+        }
+        $this->itemComparator = $itemComparator;
     }
     /**
      * Specifies key to use for comparison
@@ -43,12 +53,6 @@ class KeyComparator extends AbstractArrayComparator
     public function compare($object1, $object2)
     {
         $this->checkTypes($object1, $object2);
-        if ($object1[$this->key] < $object2[$this->key]) {
-            return -1;
-        } elseif ($object1[$this->key] > $object2[$this->key])
-        {
-            return 1;
-        }
-        return 0;
+        return $this->itemComparator->compare($object1[$this->key], $object2[$this->key]);
     }
 }
