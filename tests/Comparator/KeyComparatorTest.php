@@ -3,6 +3,8 @@ namespace SGH\Comparable\Arrays\Test\Comparator;
 
 use SGH\Comparable\Arrays\Comparator\KeyComparator;
 use SGH\Comparable\Test\Comparator\AbstractComparatorTest;
+use SGH\Comparable\Comparator\NumericComparator;
+use SGH\Comparable\Comparator\ObjectComparator;
 /**
  * ArrayComparator test case.
  * 
@@ -33,6 +35,28 @@ class KeyComparatorTest extends AbstractComparatorTest
         $this->assertCompareResult($expectedOrder, $actualOrder);
     }
     /**
+     * @test
+     * @dataProvider dataMissingItems
+     * @expectedException \SGH\Comparable\ComparatorException
+     */
+    public function testMissingItemStrictMode($key, $comparator, $array1, $array2, $expectedOrder)
+    {
+        $this->arrayComparator = new KeyComparator($key, $comparator);
+        $actualOrder = $this->arrayComparator->compare($array1, $array2);
+        $this->assertCompareResult($expectedOrder, $actualOrder);
+    }
+    /**
+     * @test
+     * @dataProvider dataMissingItems
+     */
+    public function testMissingItemNonStrictMode($key, $comparator, $array1, $array2, $expectedOrder)
+    {
+        $this->arrayComparator = new KeyComparator($key, $comparator);
+        $this->arrayComparator->setStrict(false);
+        $actualOrder = $this->arrayComparator->compare($array1, $array2);
+        $this->assertCompareResult($expectedOrder, $actualOrder);
+    }
+    /**
      * Data provider for testCompare()
      * 
      * @return mixed[][]
@@ -48,5 +72,18 @@ class KeyComparatorTest extends AbstractComparatorTest
             'float' => ['foo', ['foo' => 0.0], ['foo' => 0.1], -1]
         );
     }
+    /**
+     * Data provider for testMissingItemStrictMode() and testMissingItemNonStrictMode()
+     * 
+     * @return mixed[][]
+     */
+    public static function dataMissingItems()
+    {
+        return array(
+            'any_gt_null' => ['foo', new NumericComparator, ['foo' => 1, 'bar' => 1], ['bar' => 1], 1 ],
+            'null_lt_any' => ['foo', new NumericComparator, ['bar' => 1], ['bar' => 1, 'foo' => 1], -1 ],
+            'null_eq_null' => ['foo', new NumericComparator, ['bar' => 1], ['bar' => 2], 0 ],
+            'objects' => ['foo', new ObjectComparator, ['foo' => new \stdClass], [], 1 ],
+        );
+    }
 }
-

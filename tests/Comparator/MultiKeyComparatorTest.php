@@ -5,6 +5,7 @@ use SGH\Comparable\Arrays\Comparator\KeyComparator;
 use SGH\Comparable\Test\Comparator\AbstractComparatorTest;
 use SGH\Comparable\Comparator\NumericComparator;
 use SGH\Comparable\Arrays\Comparator\MultiKeyComparator;
+use SGH\Comparable\Comparator\ObjectComparator;
 /**
  * ArrayComparator test case.
  * 
@@ -35,6 +36,28 @@ class MultiKeyComparatorTest extends AbstractComparatorTest
         $this->assertCompareResult($expectedOrder, $actualOrder);
     }
     /**
+     * @test
+     * @dataProvider dataMissingItems
+     * @expectedException \SGH\Comparable\ComparatorException
+     */
+    public function testMissingItemStrictMode($comparatorsByKey, $array1, $array2, $expectedOrder)
+    {
+        $this->arrayComparator = new MultiKeyComparator($comparatorsByKey);
+        $actualOrder = $this->arrayComparator->compare($array1, $array2);
+        $this->assertCompareResult($expectedOrder, $actualOrder);
+    }
+    /**
+     * @test
+     * @dataProvider dataMissingItems
+     */
+    public function testMissingItemNonStrictMode($comparatorsByKey, $array1, $array2, $expectedOrder)
+    {
+        $this->arrayComparator = new MultiKeyComparator($comparatorsByKey);
+        $this->arrayComparator->setStrict(false);
+        $actualOrder = $this->arrayComparator->compare($array1, $array2);
+        $this->assertCompareResult($expectedOrder, $actualOrder);
+    }
+    /**
      * Data provider for testCompare()
      * 
      * @return mixed[][]
@@ -45,6 +68,9 @@ class MultiKeyComparatorTest extends AbstractComparatorTest
             'foo_gt' => [
                 ['foo' => new NumericComparator, 'bar' => new NumericComparator],
                 ['foo' => 2, 'bar' => 1], ['foo' => 1, 'bar' => 1], 1 ],
+            'foo_gt_bar_missing' => [
+                ['foo' => new NumericComparator, 'bar' => new NumericComparator],
+                ['foo' => 2], ['foo' => 1], 1 ],
             'foo_eq_bar_gt' => [
                 ['foo' => new NumericComparator, 'bar' => new NumericComparator],
                 ['foo' => 1, 'bar' => 2], ['foo' => 1, 'bar' => 1], 1 ],
@@ -54,6 +80,23 @@ class MultiKeyComparatorTest extends AbstractComparatorTest
             'numeric_indexes' => [
                 [1 => new NumericComparator, 0 => new NumericComparator],
                 [1, 1, 1], [1, 0, 1], 1 ],
+        );
+    }
+    /**
+     * Data provider for testMissingItemStrictMode() and testMissingItemNonStrictMode()
+     *
+     * @return mixed[][]
+     */
+    public static function dataMissingItems()
+    {
+        return array(
+            'any_gt_null' => [['foo' => new NumericComparator], ['foo' => 1, 'bar' => 1], ['bar' => 1], 1 ],
+            'null_lt_any' => [['foo' => new NumericComparator], ['bar' => 1], ['bar' => 1, 'foo' => 1], -1 ],
+            'null_eq_null' => [['foo' => new NumericComparator], ['bar' => 1], ['bar' => 2], 0 ],
+            'objects' => [['foo' => new ObjectComparator], ['foo' => new \stdClass], [], 1 ],
+            'foo_eq_bar_gt' => [
+                ['foo' => new NumericComparator, 'bar' => new NumericComparator],
+                ['foo' => 1, 'bar' => 2], ['foo' => 1], 1 ],
         );
     }
 }
