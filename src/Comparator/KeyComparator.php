@@ -4,7 +4,7 @@ namespace SGH\Comparable\Arrays\Comparator;
 use SGH\Comparable\Comparator;
 use SGH\Comparable\Comparator\NumericComparator;
 /**
- * Configurable array comparator
+ * Array comparator that compares items with specific key, using another comparator
  * 
  * @author Fabian Schmengler <fschmengler@sgh-it.eu>
  * @copyright &copy; 2015 SGH informationstechnologie UG

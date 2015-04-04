@@ -16,7 +16,6 @@ use SGH\Comparable\Test\Comparator\AbstractComparatorTest;
 class KeyComparatorTest extends AbstractComparatorTest
 {
     /**
-     *
      * @var KeyComparator
      */
     private $arrayComparator;
