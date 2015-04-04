@@ -3,7 +3,6 @@ namespace SGH\Comparable\Arrays\Comparator;
 
 use SGH\Comparable\Comparator;
 use SGH\Comparable\Comparator\NumericComparator;
-use SGH\Comparable\ComparatorException;
 /**
  * Array comparator that compares items with specific key, using another comparator
  * 
@@ -14,20 +13,12 @@ use SGH\Comparable\ComparatorException;
  * @package Comparable\Arrays
  * @since 1.0.0
  */
-class KeyComparator extends AbstractArrayComparator
+class KeyComparator implements Comparator
 {
     /**
-     * @var string
+     * @var MultiKeyComparator
      */
-    private $key;
-    /**
-     * @var boolean
-     */
-    private $strict = true;
-    /**
-     * @var Comparator
-     */
-    private $itemComparator;
+    private $multiKeyComparator;
     /**
      * Constructor
      * 
@@ -35,22 +26,11 @@ class KeyComparator extends AbstractArrayComparator
      */
     public function __construct($key, Comparator $itemComparator = null)
     {
-        $this->setKey($key);
+        $this->multiKeyComparator = new MultiKeyComparator();
         if ($itemComparator === null) {
             $itemComparator = new NumericComparator();
         }
-        $this->itemComparator = $itemComparator;
-    }
-    /**
-     * Specifies key to use for comparison
-     * 
-     * @param string $key
-     * @return \SGH\Comparable\Arrays\Comparator\KeyComparator
-     */
-    public function setKey($key)
-    {
-        $this->key = $key;
-        return $this;
+        $this->multiKeyComparator->appendComparator($key, $itemComparator);
     }
     /**
      * Turns strict mode on or off. In strict mode, array keys must exist. In non-strict mode, missing items are
@@ -61,7 +41,7 @@ class KeyComparator extends AbstractArrayComparator
      */
     public function setStrict($strict)
     {
-        $this->strict = (bool) $strict;
+        $this->multiKeyComparator->setStrict($strict);
         return $this;
     }
 	/* (non-PHPdoc)
@@ -69,26 +49,6 @@ class KeyComparator extends AbstractArrayComparator
      */
     public function compare($object1, $object2)
     {
-        $this->checkTypes($object1, $object2);
-        if ($this->strict) {
-            if (! array_key_exists($this->key, $object1)) {
-                throw new ComparatorException(__METHOD__ . ' expects array key ' . $this->key . ' to exist in parameter 1.');
-            }
-            if (! array_key_exists($this->key, $object2)) {
-                throw new ComparatorException(__METHOD__ . ' expects array key ' . $this->key . ' to exist in parameter 2.');
-            }
-        } else {
-            $null1 = $null2 = 0;
-            if (! array_key_exists($this->key, $object1)) {
-                $null1 = -1;
-            }
-            if (! array_key_exists($this->key, $object2)) {
-                $null2 = -1;
-            }
-            if ($null1 || $null2) {
-                return $null1 - $null2;
-            }
-        }
-        return $this->itemComparator->compare($object1[$this->key], $object2[$this->key]);
+        return $this->multiKeyComparator->compare($object1, $object2);
     }
 }
