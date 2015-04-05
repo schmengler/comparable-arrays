@@ -57,6 +57,16 @@ class KeyComparatorTest extends AbstractComparatorTest
         $this->assertCompareResult($expectedOrder, $actualOrder);
     }
     /**
+     * Tests KeyComparator::calback()
+     * 
+     * @test
+     */
+    public function testCallback()
+    {
+        $callback = KeyComparator::callback('foo');
+        $this->assertInstanceOf('\SGH\Comparable\Comparator\InvokableComparator', $callback);
+    }
+    /**
      * Data provider for testCompare()
      * 
      * @return mixed[][]

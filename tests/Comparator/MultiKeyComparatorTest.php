@@ -58,6 +58,26 @@ class MultiKeyComparatorTest extends AbstractComparatorTest
         $this->assertCompareResult($expectedOrder, $actualOrder);
     }
     /**
+     * Tests MultiKeyComparator::calback()
+     * 
+     * @test
+     */
+    public function testCallback()
+    {
+        $callback = MultiKeyComparator::callback();
+        $this->assertInstanceOf('\SGH\Comparable\Comparator\InvokableComparator', $callback);
+    }
+    /**
+     * @test
+     * @dataProvider dataInvalidArguments
+     * @expectedException \SGH\Comparable\ComparatorException
+     */
+    public function testInvalidArguments($object1, $object2)
+    {
+        $this->arrayComparator = new MultiKeyComparator(array());
+        $this->arrayComparator->compare($object1, $object2);
+    }
+    /**
      * Data provider for testCompare()
      * 
      * @return mixed[][]
@@ -80,6 +100,8 @@ class MultiKeyComparatorTest extends AbstractComparatorTest
             'numeric_indexes' => [
                 [1 => new NumericComparator, 0 => new NumericComparator],
                 [1, 1, 1], [1, 0, 1], 1 ],
+            'all_empty' => [ [], [], [], 0],
+            'comparators_empty' => [ [], ['foo' => 1], ['foo' => 2], 0],
         );
     }
     /**
@@ -97,6 +119,22 @@ class MultiKeyComparatorTest extends AbstractComparatorTest
             'foo_eq_bar_gt' => [
                 ['foo' => new NumericComparator, 'bar' => new NumericComparator],
                 ['foo' => 1, 'bar' => 2], ['foo' => 1], 1 ],
+        );
+    }
+    /**
+     * Data provider for testInvalidArguments()
+     * 
+     * @return mixed[][]
+     */
+    public static function dataInvalidArguments()
+    {
+        return array(
+        	[ array(), new \stdClass() ],
+        	[ new \stdClass(), array() ],
+            [ 'string', array() ],
+            [ 42, array() ],
+            [ null, array() ],
+            [ new \ArrayObject([]), array() ],
         );
     }
 }

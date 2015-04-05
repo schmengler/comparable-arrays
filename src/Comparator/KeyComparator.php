@@ -3,6 +3,7 @@ namespace SGH\Comparable\Arrays\Comparator;
 
 use SGH\Comparable\Comparator;
 use SGH\Comparable\Comparator\NumericComparator;
+use SGH\Comparable\Comparator\InvokableComparator;
 /**
  * Array comparator that compares items with specific key, using another comparator
  * 
@@ -50,5 +51,14 @@ class KeyComparator implements Comparator
     public function compare($object1, $object2)
     {
         return $this->multiKeyComparator->compare($object1, $object2);
+    }
+    /**
+     * Returns a callback object that can be used for core functions that take a callback parameter
+     *
+     * @return \SGH\Comparable\Comparator\InvokableComparator
+     */
+    public static function callback($key, $itemComparator = null)
+    {
+        return new InvokableComparator(new static($key, $itemComparator));
     }
 }
