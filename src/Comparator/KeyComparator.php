@@ -45,7 +45,19 @@ class KeyComparator implements Comparator
         $this->multiKeyComparator->setStrict($strict);
         return $this;
     }
-	/* (non-PHPdoc)
+    /**
+     * Defines if the comparator should accept objects that implement the ArrayAccss interface instead of array
+     * Defaults to true.
+     * 
+     * @param boolean $accept
+     * @return \SGH\Comparable\Arrays\Comparator\MultiKeyComparator
+     */
+    public function setAcceptArrayAccessObject($accept)
+    {
+        $this->multiKeyComparator->setAcceptArrayAccessObject($accept);
+        return $this;
+    }
+    /* (non-PHPdoc)
      * @see \SGH\Comparable\Comparator::compare()
      */
     public function compare($object1, $object2)

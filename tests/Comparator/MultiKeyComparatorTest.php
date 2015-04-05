@@ -78,6 +78,16 @@ class MultiKeyComparatorTest extends AbstractComparatorTest
         $this->arrayComparator->compare($object1, $object2);
     }
     /**
+     * @test
+     * @expectedException \SGH\Comparable\ComparatorException
+     */
+    public function testNotAcceptArrayAccess()
+    {
+        $this->arrayComparator = new MultiKeyComparator(array());
+        $this->arrayComparator->setAcceptArrayAccessObject(false);
+        $this->arrayComparator->compare(new \ArrayObject([]), new \ArrayObject([]));
+    }
+    /**
      * Data provider for testCompare()
      * 
      * @return mixed[][]
@@ -102,6 +112,9 @@ class MultiKeyComparatorTest extends AbstractComparatorTest
                 [1, 1, 1], [1, 0, 1], 1 ],
             'all_empty' => [ [], [], [], 0],
             'comparators_empty' => [ [], ['foo' => 1], ['foo' => 2], 0],
+            'array_object' => [
+                ['foo' => new NumericComparator, 'bar' => new NumericComparator],
+                new \ArrayObject(['foo' => 2, 'bar' => 1]), new \ArrayObject(['foo' => 1, 'bar' => 1]), 1 ],
         );
     }
     /**
@@ -134,7 +147,6 @@ class MultiKeyComparatorTest extends AbstractComparatorTest
             [ 'string', array() ],
             [ 42, array() ],
             [ null, array() ],
-            [ new \ArrayObject([]), array() ],
         );
     }
 }

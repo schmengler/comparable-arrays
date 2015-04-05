@@ -57,6 +57,16 @@ class KeyComparatorTest extends AbstractComparatorTest
         $this->assertCompareResult($expectedOrder, $actualOrder);
     }
     /**
+     * @test
+     * @expectedException \SGH\Comparable\ComparatorException
+     */
+    public function testNotAcceptArrayAccess()
+    {
+        $this->arrayComparator = new KeyComparator('foo');
+        $this->arrayComparator->setAcceptArrayAccessObject(false);
+        $this->arrayComparator->compare(new \ArrayObject([]), new \ArrayObject([]));
+    }
+    /**
      * Tests KeyComparator::calback()
      * 
      * @test
@@ -79,7 +89,8 @@ class KeyComparatorTest extends AbstractComparatorTest
             'int_gt' => ['foo', ['foo' => 1, 'bar' => 0], ['foo' => 2, 'bar' => 1], -1 ],
             'string_to_int' => ['foo', ['foo' => '010'], ['foo' => '8'], 1 ],
             'string_to_float' => ['foo', ['foo' => '0.5'], ['foo' => '.55'], -1 ],
-            'float' => ['foo', ['foo' => 0.0], ['foo' => 0.1], -1]
+            'float' => ['foo', ['foo' => 0.0], ['foo' => 0.1], -1],
+            'array_object' => ['foo', new \ArrayObject(['foo' => 2, 'bar' => 1]), new \ArrayObject(['foo' => 1, 'bar' => 1]), 1 ],
         );
     }
     /**

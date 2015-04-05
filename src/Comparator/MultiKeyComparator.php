@@ -29,7 +29,7 @@ class MultiKeyComparator implements Comparator
     /**
      * @var boolean
      */
-    protected $_acceptsArrayAccess = false;
+    protected $acceptArrayAccess = true;
     /**
      * Verifies that both operands are arrays
      *
@@ -39,10 +39,10 @@ class MultiKeyComparator implements Comparator
      */
     protected function checkTypes($object1, $object2)
     {
-        if (! is_array($object1) && ! ($this->_acceptsArrayAccess && $object1 instanceof \ArrayAccess)) {
+        if (! is_array($object1) && ! ($this->acceptArrayAccess && $object1 instanceof \ArrayAccess)) {
             throw new ComparatorException('$object1 (type: ' . gettype($object1) . ') is not an array.');
         }
-        if (! is_array($object2) && ! ($this->_acceptsArrayAccess && $object2 instanceof \ArrayAccess)) {
+        if (! is_array($object2) && ! ($this->acceptArrayAccess && $object2 instanceof \ArrayAccess)) {
             throw new ComparatorException('$object2 (type: ' . gettype($object2) . ') is not an array.');
         }
     }
@@ -87,6 +87,18 @@ class MultiKeyComparator implements Comparator
     public function setStrict($strict)
     {
         $this->strict = (bool) $strict;
+        return $this;
+    }
+    /**
+     * Defines if the comparator should accept objects that implement the ArrayAccss interface instead of array
+     * Defaults to true.
+     * 
+     * @param boolean $accept
+     * @return \SGH\Comparable\Arrays\Comparator\MultiKeyComparator
+     */
+    public function setAcceptArrayAccessObject($accept)
+    {
+        $this->acceptArrayAccess = $accept;
         return $this;
     }
     /* (non-PHPdoc)
