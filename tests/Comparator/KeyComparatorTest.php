@@ -2,7 +2,6 @@
 namespace SGH\Comparable\Arrays\Test\Comparator;
 
 use SGH\Comparable\Arrays\Comparator\KeyComparator;
-use SGH\Comparable\Test\Comparator\AbstractComparatorTest;
 use SGH\Comparable\Comparator\NumericComparator;
 use SGH\Comparable\Comparator\ObjectComparator;
 /**
