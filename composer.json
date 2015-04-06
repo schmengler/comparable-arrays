@@ -1,7 +1,6 @@
 {
   "name" : "sgh/comparable-arrays",
   "description" : "Provides generic Comparators for arrays.",
-  "version" : "1.0.0",
   "require" : {
     "php" : ">=5.4.0",
     "sgh/comparable" : ">=1.1.0"
